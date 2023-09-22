@@ -2,34 +2,29 @@
 import java.util.*;
 
 public class Test {
-    double[] vals;
-    double result;
+    int n, k;
+    ArrayList<Integer> vals;
+    int result;
 
-    public Test(double[] vals, double result) {
+    public Test(int k, ArrayList<Integer> vals, int result) {
+        this.k = k;
         this.vals = vals;
         this.result = result;
     }
 
     public static void main(String[] args) {
         Test[] tests = new Test[] {
-            new Test(new double[] {7855988}, 7855988),
-            new Test(new double[] {3618202, 1242552, 6861892}, 2001138),
-            new Test(new double[] {3752797, 3301118, 8946152, 2027054, 3895471}, 23820)
+            new Test( 2, new ArrayList<Integer>(Arrays.asList(3,5,1,1)), 2 ),
+            new Test( 4, new ArrayList<Integer>(Arrays.asList(30,40,20,41,50)), 1 ),
         };
         
         for (Test test : tests) {
-            double result = Solution.getResult(test.vals);
+            String vals = test.vals.toString();
+            int result = Solution.getSumOfSpreads(test.k, test.vals);
 
-            System.out.print(String.format("Test `%s` ", Arrays.toString(test.vals)));
-            if (Math.abs(result) == test.result) {
-                System.out.println("succeeded");
-                
-                System.out.println("==== solutions: ");
-                double[] vals = new double[test.vals.length+1];
-                System.arraycopy(test.vals, 0, vals, 0, test.vals.length);
-                vals[vals.length-1] = result;
-
-                ExtraCredit.getAllSolutions(vals);
+            System.out.print(String.format("Test `%s` ", vals));
+            if (result == test.result) {
+                System.out.println("succeeded");;
             }
             else
                 System.out.println(String.format("failed: %s != %s", test.result, result));
