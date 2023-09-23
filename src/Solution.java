@@ -8,7 +8,80 @@ import java.io.*;
 import java.util.*;
 
 public class Solution {
+    /*
+     * This solution uses the K-means algorithm
+     * 
+     * I found this while stumped on bettering my solution. I used ChatGPT, which utilized
+     * the K-means algorithm, which led me to doing some futher research as I had never heard
+     * of this before.
+     * 
+     * Although I did not think up the K-means algorithm, I only researched the concept. All code
+     * below is of my own. I did not copy/transcribe any code from ChatGPT or other internet sites.
+    */
+
+    class KCluster {
+        int centroid;
+        ArrayList<Integer> points;
+
+        public KCluster(int point) {
+            this.centroid = point;
+            this.addPoint(point);
+        }
+
+        public void addPoint(int point) {
+            this.points.add(point);
+        }
+
+        public int spread() {
+            if ( this.points.size() == 1 )
+                return 0;
+
+            int min = Collections.min(this.points);
+            int max = Collections.max(this.points);
+
+            return max - min;
+        }
+
+        public int distanceFromCentroid(int num) {
+            return Math.abs(this.centroid - num);
+        }
+
+        public boolean computeCentroid() {
+            boolean centroidHasChanged = false;
+
+            // compute average of points
+            double average = this.points
+                .stream()
+                .mapToDouble(p -> p)
+                .average()
+                .getAsDouble();
+
+            // update centroid if any point is closer to the average than the centroid
+            double centroidDistanceFromAverage = Math.abs(average - this.centroid);
+            for (int i = 0; i < this.points.size(); i++) {
+                int point = this.points.get(i);
+
+                // skip if point is the same as the centroid (same value)
+                if (this.centroid != point) {
+                    double distanceFromAverage = Math.abs(average - point);
+                    if ( distanceFromAverage < centroidDistanceFromAverage) {
+                        // update centroid
+                        this.centroid = point;
     
+                        // update return value
+                        centroidHasChanged = true;
+    
+                        // since centroid changed, calculate new distance from average
+                        centroidDistanceFromAverage = Math.abs(average - this.centroid);
+                    }
+                }
+            }
+
+            // return whether the centroid changed or not
+            return centroidHasChanged;
+        }
+    }
+
     public static void main(String[] args) {
         // read input from stdin
         Scanner scanner = new Scanner(System.in);
@@ -71,13 +144,5 @@ public class Solution {
         return sumOfSpreads;
     }
 
-    public int spread(int[] weights) {
-        if ( weights.length == 1 )
-            return 0;
-
-        int max = Arrays.stream(weights).max().getAsInt();
-        int min = Arrays.stream(weights).min().getAsInt();
-
-        return max - min;
-    }
+    
 }
