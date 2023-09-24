@@ -3,10 +3,10 @@ import java.util.*;
 
 public class Test {
     int n, k;
-    ArrayList<Integer> vals;
+    int[] vals;
     int result;
 
-    public Test(int k, ArrayList<Integer> vals, int result) {
+    public Test(int k, int[] vals, int result) {
         this.k = k;
         this.vals = vals;
         this.result = result;
@@ -14,12 +14,12 @@ public class Test {
 
     public static void main(String[] args) {
         Test[] tests = new Test[] {
-            new Test( 2, new ArrayList<Integer>(Arrays.asList(3,5,1,1)), 2 ),
-            new Test( 4, new ArrayList<Integer>(Arrays.asList(30,40,20,41,50)), 1 ),
+            new Test( 2, new int[] {3,5,1,1}, 2 ),
+            new Test( 4, new int[] {30,40,20,41,50}, 1 ),
         };
         
         for (Test test : tests) {
-            String vals = test.vals.toString();
+            String vals = Arrays.toString(test.vals);
             int result = Solution.getSumOfSpreads(test.k, test.vals);
 
             System.out.print(String.format("Test `%s` ", vals));
