@@ -1,7 +1,7 @@
 /*
  * Patrick Miller
  * CMPSC 463
- * Assignment #1: Solution
+ * Assignment #2: Solution
  */
 
 import java.io.*;
