@@ -1,3 +1,4 @@
+package Assignment2;
 /*
  * Patrick Miller
  * CMPSC 463
