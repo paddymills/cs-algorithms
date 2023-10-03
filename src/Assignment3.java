@@ -29,8 +29,8 @@ public class Assignment3 {
      *   @return see above
      */
     static Pair partition(int[] array, int p, int q) {
-        int i = p;
-        Pair pair = new Pair(p,p);
+        int i = p + 1;
+        Pair pair = new Pair(p,p);  // pivot element(s)
         
         // Loop invariants:
         // 1) All values in array[p .. pair.left-1] are less than array[Pair.left]
@@ -40,20 +40,49 @@ public class Assignment3 {
             // TODO: Complete the code in the loop so that:
             //       1) The loop invariant is maintained, even as we increment i
             //       2) The loop runs in O(n) time where n = q - p
+
+            // element is less than pair
+            if ( array[i] < array[pair.left]) {
+                // essentially, move element before pair and shift pair down one
+
+                // swap current element with pair.left to put element before pair
+                swap(array, i, pair.left);
+                pair.left++;
+
+                // item at i was the first element of pair, so swap it with first element after pair
+                swap(array, pair.right+1, i);
+                pair.right++;
+            }
+
+            // element equals pair, so absorb it into pair
+            if ( array[i] == array[pair.left] ) {
+                swap(array, i, pair.right+1);
+                pair.right++;
+            }
+
+            // element is greater than pair -> where it needs to be so do nothing
+
             i++;
         }
+        
         return pair;
     }
 
     /**
      * Sort values in array[p..q)
-     * @param array
-     * @param p
-     * @param q
+     * @param array the array of values to be sorted
+     * @param p the index of the first element in the array to be sorted
+     * @param q one past index of the last element in the array to be sorted
      */
     static void quicksort(int[] array, int p, int q) {
         // TODO: Complete the code to use the version of partition that you
         // completed above
+        if ( p < q ) {
+            Pair r = partition(array, p, q);
+
+            quicksort(array, p, r.left);
+            quicksort(array, r.right+1, q);
+        }
     }
     
     /**
@@ -75,6 +104,14 @@ public class Assignment3 {
     static int sortOne(int[] array, int k, int p, int q) {
         // TODO: Complete this method so that sortOne runs in O(n) in the average case
         
+    }
+
+    static void swap(int[] array, int a, int b) {
+        int temp;
+
+        temp = array[a];
+        array[a] = array[b];
+        array[b] = temp;
     }
     
     // Testing code, do not modify
