@@ -41,8 +41,14 @@ public class Assignment3 {
             //       1) The loop invariant is maintained, even as we increment i
             //       2) The loop runs in O(n) time where n = q - p
 
+            // element equals pair, so absorb it into pair
+            if ( array[i] == array[pair.left] ) {
+                swap(array, i, pair.right+1);
+                pair.right++;
+            }
+
             // element is less than pair
-            if ( array[i] < array[pair.left]) {
+            else if ( array[i] < array[pair.left]) {
                 // essentially, move element before pair and shift pair down one
 
                 // swap current element with pair.left to put element before pair
@@ -54,17 +60,11 @@ public class Assignment3 {
                 pair.right++;
             }
 
-            // element equals pair, so absorb it into pair
-            if ( array[i] == array[pair.left] ) {
-                swap(array, i, pair.right+1);
-                pair.right++;
-            }
-
             // element is greater than pair -> where it needs to be so do nothing
 
             i++;
         }
-        
+
         return pair;
     }
 
@@ -104,6 +104,7 @@ public class Assignment3 {
     static int sortOne(int[] array, int k, int p, int q) {
         // TODO: Complete this method so that sortOne runs in O(n) in the average case
         
+        return array[k];
     }
 
     static void swap(int[] array, int a, int b) {
