@@ -75,7 +75,7 @@ public class Assignment3 {
      * @param q one past index of the last element in the array to be sorted
      */
     static void quicksort(int[] array, int p, int q) {
-        // TODO: Complete the code to use the version of partition that you
+        // DOne: Complete the code to use the version of partition that you
         // completed above
         if ( p < q ) {
             Pair r = partition(array, p, q);
@@ -102,7 +102,19 @@ public class Assignment3 {
     }
     
     static int sortOne(int[] array, int k, int p, int q) {
-        // TODO: Complete this method so that sortOne runs in O(n) in the average case
+        // DOne: Complete this method so that sortOne runs in O(n) in the average case
+
+        Pair r;
+        do {
+            r = partition(array, p, q);
+        
+            if ( r.left > k )
+                q = r.left;
+
+            else if ( r.right < k )
+                p = r.right + 1;
+
+        } while (r.left > k || r.right < k);
         
         return array[k];
     }
