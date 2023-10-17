@@ -19,7 +19,8 @@ def main():
     parser = ArgumentParser()
     parser.add_argument("-a", "--analysis", action="store_true", help="parse input")
     parser.add_argument("-e", "--extra", action="store_true", help="parse input has extra output")
-    parser.add_argument("-n", help="generate input.txt")
+    parser.add_argument("-n", help="set number of values to generate")
+    parser.add_argument("-s", "--sorted", action="store_true", help="generate sorted list of values")
     parser.add_argument("-v", "--values", action="store_true", help="generate input.txt")
     args = parser.parse_args()
 
@@ -28,7 +29,7 @@ def main():
         num_vals = int(args.n)
 
     if args.values:
-        generate()
+        generate(args.sorted)
 
     if args.analysis:
         analysis(args.extra)
@@ -53,12 +54,16 @@ def analysis(with_extra=False):
     print(tabulate(table, headers="firstrow"))
 
 
-def generate():
-    print(f'generating {num_vals} values')
+def generate(sorted_vals=False):
+    print(f"generating {num_vals} {'sorted' if sorted_vals else 'randomized'} values")
+
     with open('input.txt', 'w') as f:
         f.write(f"{num_vals}\n")
-        for i in range(num_vals):
-            num = random.randint(1, upper_bound)
+        nums = [random.randint(1, upper_bound) for _ in range(num_vals)]
+        if sorted_vals:
+            nums = sorted(nums)
+
+        for i, num in enumerate(nums):
             f.write(f"{num} {i}\n")
 
 if __name__ == "__main__":
