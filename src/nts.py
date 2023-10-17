@@ -37,7 +37,7 @@ def main():
 def analysis(with_extra=False):
     table = [["Sort", "Time(ms)", "Memory(KB)"]]
     for i in range(11):
-        table.append([i+1, None, None])
+        table.append([i+1, "Timed out", "--"])
 
     current_sort = 0
     for line in sys.stdin:
