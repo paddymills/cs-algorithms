@@ -3,16 +3,26 @@
 # rm output/*.txt
 
 showOutput="N"
-for runId in {1..5}
+# for runId in {1..5}
+# do
+#     for sortId in {9..11}
+#     do
+#         for filename in input/*;
+#         do
+#             # output=$(echo $filename | sed "s/input/output/g")
+#             echo "Sort $sortId:$runId"
+#             timeout 5m ./nameThatSort 0459 $sortId $showOutput < $filename | python3 src/nts.py --upload $filename --sort-id $sortId
+#         done
+#     done
+# done
+
+for runId in {1..3}
 do
-    for sortId in {2..11}
+    for filename in input/*;
     do
-        for filename in input/*;
-        do
-            # output=$(echo $filename | sed "s/input/output/g")
-            echo "Sort $sortId:$runId"
-            timeout 5m ./nameThatSort 0459 $sortId $showOutput < $filename | python3 src/nts.py --upload $filename --sort-id $sortId
-        done
+        # output=$(echo $filename | sed "s/input/output/g")
+        echo "run $runId"
+        timeout 5m ./nameThatSort 0459 11 $showOutput < $filename | python3 src/nts.py --upload $filename --sort-id 11
     done
 done
 
