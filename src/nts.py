@@ -54,9 +54,13 @@ def main():
     parser.add_argument("-u", "--upload", help="upload results")
     parser.add_argument("--sort-id", help="id of sort (for upload)")
     parser.add_argument("-p", "--plot", action="store_true", help="plot results")
+    parser.add_argument("--print", action="store_true", help="plot results")
     args = parser.parse_args()
 
-    if args.n:
+    if args.print:
+        generate_stdout(int(args.n), args.sorted)
+
+    elif args.n:
         generate(int(args.n), args.sorted)
 
     if args.values:
@@ -110,6 +114,24 @@ def generate(n, sorted_vals=False):
 
         for i, num in enumerate(nums):
             f.write(f"{num} {i}\n")
+
+    if sorted_vals is False:
+        generate(n, sorted_vals=not sorted_vals)
+
+
+def generate_stdout(n,sorted_vals):
+    print(n)
+    nums = [random.randint(1, upper_bound) for _ in range(n)]
+
+    duplicate = random.randint(1, n-1);
+    nums[random.randint(1, n-1)] = nums[duplicate]
+    nums[random.randint(1, n-1)] = nums[duplicate]
+
+    if sorted_vals:
+        nums = sorted(nums)
+
+    for i, num in enumerate(nums):
+        print(num, i)
 
 
 def upload(sort_id, input_file):
