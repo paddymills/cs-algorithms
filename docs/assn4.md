@@ -4,16 +4,16 @@ In this challenge, we will look at a related problem. Here the actor would like 
 
 # Input Format
 
-The input begins with an integer n, on a line by itself.
+The input begins with an integer `n`, on a line by itself.
 
-The next n lines have the form:
+The next `n` lines have the form:
 
 `[id] [Start Time] [End Time] [EV]`
 
 where
 - `[id]` is an integer id that uniquely identifies the movie.
 - `[Start Time]` is an integer representing the time that the movie production starts.
-- `[End Time]` is an integer representing the time just after the movie production end. Since this time is just after the end of the schedule, the actor can choose to star in a movie whose [Start Time] equals the [End Time] of a different movie, which has been selected by the actor.
+- `[End Time]` is an integer representing the time just after the movie production end. Since this time is just after the end of the schedule, the actor can choose to star in a movie whose `[Start Time]` equals the `[End Time]` of a different movie, which has been selected by the actor.
 - `[EV]` is a floating point number giving the expected number of Oscars that the actor will win an Oscar if they star in this movie.
 
 # Constraints
