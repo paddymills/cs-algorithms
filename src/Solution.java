@@ -6,15 +6,13 @@
  * Approach: Top-Down
  */
 
-package TopDown;
-
 
 import java.io.*;
 import java.util.*;
 
 public class Solution {
 
-    class Movie {
+    static class Movie {
         int id;     // movie id
         int start;  // start time
         int end;    // time just after end (movie2.start == movie1.end is acceptable)
