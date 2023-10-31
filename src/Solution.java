@@ -33,7 +33,9 @@ public class Solution {
     public static void main(String[] args) {
         ArrayList<Movie> movies = readInput();
 
-        // impl
+        for (Movie m : movies) {
+            System.out.println(m.id);
+        }
     }
 
     public static ArrayList<Movie> readInput() {
@@ -50,6 +52,15 @@ public class Solution {
 
         scanner.close();
 
-        return movies
+        return movies;
     }
+
+    public static void topDown() {
+        // impl
+    }
+
+    public static void bottomUp() {
+        // impl
+    }
+    
 }
