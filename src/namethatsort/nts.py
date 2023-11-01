@@ -152,7 +152,7 @@ def upload(sort_id, input_file):
 
 
     # parse data
-    fn_pattern = re.compile(r"(?:[a-z]+/)?(\d+)_([a-z]+)\.txt")
+    fn_pattern = re.compile(r"(?:[a-z]+1?/)?(\d+)_([a-z]+)\.txt")
     match = fn_pattern.match(input_file)
     if not match:
         print(input_file, "Not parsed for `n` and `ordering`. Exiting.")

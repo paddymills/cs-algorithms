@@ -18,11 +18,11 @@ showOutput="N"
 
 for runId in {1..3}
 do
-    for filename in input/*;
+    for filename in input1/*;
     do
         # output=$(echo $filename | sed "s/input/output/g")
         echo "run $runId"
-        timeout 5m ./nameThatSort 0459 11 $showOutput < $filename | python3 src/nts.py --upload $filename --sort-id 11
+        timeout 5m ./nameThatSort 0459 10 $showOutput < $filename | python3 src/nts.py --upload $filename --sort-id 10
     done
 done
 
