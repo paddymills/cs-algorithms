@@ -32,13 +32,11 @@ public class Solution {
         Movie[] movies = readInput();
         indexMovies(movies);
 
-        // for (Integer id : bottomUp(movies)) {
-        //     System.out.println(id);
-        // }
-
-
-        for (Integer id : topDown(movies)) {
-            System.out.println(id);
+        boolean[] results = topDown(movies);
+        // boolean[] results = bottomUp(movies);
+        for (int i=0; i<movies.length; i++) {
+            if ( results[i] )
+                System.out.println(movies[i].id);
         }
     }
 
@@ -82,7 +80,7 @@ public class Solution {
         }
     }
 
-    public static ArrayList<Integer> topDown(Movie[] movies) {
+    public static boolean[] topDown(Movie[] movies) {
         int numberOfTimes = movies[movies.length-1].end+1;
         Float[][] memo = new Float[movies.length+1][numberOfTimes];
         boolean[][] taken = new boolean[movies.length+1][numberOfTimes];
@@ -92,11 +90,11 @@ public class Solution {
         // printMemo(memo, taken);
 
         // calculate result
-        ArrayList<Integer> result = new ArrayList<>();
+        boolean[] result = new boolean[movies.length];
         int i = memo.length-1;
         for (int j=memo[0].length-1; j>0;) {
             if ( taken[i][j] ) {
-                result.add(0, movies[i-1].id);
+                result[i-1] = true;
                 j = movies[i-1].start;
             }
             i--;
@@ -133,7 +131,7 @@ public class Solution {
         return memo[i][t];
     }
 
-    public static ArrayList<Integer> bottomUp(Movie[] movies) {
+    public static boolean[] bottomUp(Movie[] movies) {
         int numberOfTimes = movies[movies.length-1].end+1;
         float[][] memo = new float[movies.length+1][numberOfTimes];
         boolean[][] taken = new boolean[movies.length+1][numberOfTimes];
@@ -153,11 +151,11 @@ public class Solution {
         // printMemo(memo, taken);
 
         // calculate result
-        ArrayList<Integer> result = new ArrayList<>();
+        boolean[] result = new boolean[movies.length];
         int i = memo.length-1;
         for (int j=memo[0].length-1; j>0;) {
             if ( taken[i][j] ) {
-                result.add(0, movies[i-1].id);
+                result[i-1] = true;
                 j = movies[i-1].start;
             }
             i--;
