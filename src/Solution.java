@@ -14,18 +14,25 @@ public class Solution {
 
     static class Movie {
         int id;     // movie id
-        int start;  // start time
-        int end;    // time just after end (movie2.start == movie1.end is acceptable)
+        long start; // start time
+        long end;   // time just after end (movie2.start == movie1.end is acceptable)
         float ev;   // expected numbers of oscars to be won
 
         public Movie(String line) {
             String[] vals = line.split("\\s+");
 
             this.id    = Integer.parseInt( vals[0] );
-            this.start = Integer.parseInt( vals[1] );
-            this.end   = Integer.parseInt( vals[2] );
+            this.start = Long.parseLong( vals[1] );
+            this.end   = Long.parseLong( vals[2] );
             this.ev    = Float.parseFloat( vals[3] );
         }
+
+        // public Movie(int id, int start, int end, float ev) {
+        //     this.id    = id;
+        //     this.start = start;
+        //     this.end   = end;
+        //     this.ev    = ev;
+        // }
 
         public String toString() {
             return "Movie<" + this.id + "|" + this.start + "-" + this.end + ":" + this.ev + ">";
@@ -35,9 +42,9 @@ public class Solution {
     public static void main(String[] args) {
         Movie[] movies = readInput();
 
-        display(movies, topDown(movies));
+        // display(movies, topDown(movies));
         // System.out.println("======================");
-        // display(movies, bottomUp(movies));
+        display(movies, bottomUp(movies));
         
     }
 
@@ -66,84 +73,87 @@ public class Solution {
     }
 
     static void indexMovies(Movie[] movies) {
-        TreeMap<Integer, Integer> times = new TreeMap<>();
+        TreeMap<Long, Long> times = new TreeMap<>();
 
         // collect all start and end times
         for (int i=0; i<movies.length; i++) {
-            times.put(movies[i].start, 0);
-            times.put(movies[i].end,   0);
+            times.put(movies[i].start, null);
+            times.put(movies[i].end,   null);
         }
 
         // store times and their seqential index mapping for quick access
-        int i = 0;
-        for (Integer time : times.keySet()) {
+        long i = 0;
+        for (Long time : times.keySet()) {
             times.put(time, i);
             i++;
         }
 
         // update movie start and end times with sequential indexes
-        for (i=0; i<movies.length; i++) {
-            movies[i].start = times.get(movies[i].start);
-            movies[i].end   = times.get(movies[i].end);
+        for (int j=0; j<movies.length; j++) {
+            movies[j].start = times.get(movies[j].start);
+            movies[j].end   = times.get(movies[j].end);
         }
     }
 
-    public static boolean[] topDown(Movie[] movies) {
-        ArrayList<HashMap<Integer, Float>> memo = new ArrayList<>();
-        for (int i=0; i<movies.length; i++)
-            memo.add(new HashMap<>());
+    // public static boolean[] topDown(Movie[] movies) {
+    //     ArrayList<HashMap<Integer, Float>> memo = new ArrayList<>();
+    //     for (int i=0; i<movies.length; i++)
+    //         memo.add(new HashMap<>());
 
 
-        int end = movies[movies.length-1].end;
-        topDownHelper(movies.length-1, end, memo, movies);
+    //     int end = movies[movies.length-1].end;
+    //     topDownHelper(movies.length-1, end, memo, movies);
 
-        // calculate result
-        boolean[] result = new boolean[movies.length];
+    //     // calculate result
+    //     boolean[] result = new boolean[movies.length];
         
-        // calc result
-        for (int i=movies.length-1; i>=0; i--) {
-            if ( i == 0 ) {
-                if ( movies[i].end <= end )
-                    result[i] = true;
-            }
-            else if ( memo.get(i-1).get(end) < memo.get(i).get(end) ) {
-                result[i] = true;
-                end = movies[i].start;
-            }
-        }
+    //     // calc result
+    //     for (int i=movies.length-1; i>=0; i--) {
+    //         if ( i == 0 ) {
+    //             if ( movies[i].end <= end )
+    //                 result[i] = true;
+    //         }
+    //         else if ( memo.get(i-1).get(end) < memo.get(i).get(end) ) {
+    //             result[i] = true;
+    //             end = movies[i].start;
+    //         }
+    //     }
 
-        printMemo(memo, result);
+    //     printMemo(memo, result);
 
-        return result;
-    }
+    //     return result;
+    // }
 
-    private static float topDownHelper(int i, int t, ArrayList<HashMap<Integer, Float>> memo, Movie[] movies) {
-        if ( t <= 0 ) return 0f;
-        if ( i < 0 ) return 0f;
+    // private static float topDownHelper(int i, int t, ArrayList<HashMap<Integer, Float>> memo, Movie[] movies) {
+    //     if ( t <= 0 ) return 0f;
+    //     if ( i < 0 ) return 0f;
 
-        if ( memo.get(i).get(t) != null ) return memo.get(i).get(t);
+    //     if ( memo.get(i).get(t) != null ) return memo.get(i).get(t);
 
-        float notSelected = topDownHelper(i-1, t, memo, movies);
+    //     float notSelected = topDownHelper(i-1, t, memo, movies);
 
-        float selected = 0;
-        if ( movies[i].end <= t )
-            selected = movies[i].ev + topDownHelper(i-1, movies[i].start, memo, movies);
+    //     float selected = 0;
+    //     if ( movies[i].end <= t )
+    //         selected = movies[i].ev + topDownHelper(i-1, movies[i].start, memo, movies);
 
-        memo.get(i).put(t, Math.max(notSelected, selected));
+    //     memo.get(i).put(t, Math.max(notSelected, selected));
 
-        return memo.get(i).get(t);
-    }
+    //     return memo.get(i).get(t);
+    // }
 
     public static boolean[] bottomUp(Movie[] movies) {
         indexMovies(movies);
 
-        int numberOfTimes = movies[movies.length-1].end+1;
+        if ( movies[movies.length-1].end+1 > Integer.MAX_VALUE)
+            return new boolean[movies.length];
+        
+        int numberOfTimes = (int)movies[movies.length-1].end+1;
         float[][] memo = new float[movies.length+1][numberOfTimes];
         boolean[][] taken = new boolean[movies.length+1][numberOfTimes];
 
         for (int i=1; i<memo.length; i++) {
-            for (int j=movies[0].end; j<numberOfTimes; j++) {
-                float ev = movies[i-1].ev + memo[i-1][movies[i-1].start];
+            for (int j=(int)movies[0].end; j<numberOfTimes; j++) {
+                float ev = movies[i-1].ev + memo[i-1][(int)movies[i-1].start];
                 if ( movies[i-1].end <= j && ev > memo[i-1][j] ) {
                     memo[i][j] = ev;
                     taken[i][j] = true;
@@ -157,16 +167,12 @@ public class Solution {
 
         // calculate result
         boolean[] result = new boolean[movies.length];
-        int i = memo.length-1;
-        for (int j=memo[0].length-1; j>0;) {
+        int j=memo[0].length-1;
+        for (int i=memo.length-1; i>=0; i--) {
             if ( taken[i][j] ) {
                 result[i-1] = true;
-                j = movies[i-1].start;
+                j = (int)movies[i-1].start;
             }
-            i--;
-
-            if ( i < 0 )
-                break;
         }
 
         return result;
