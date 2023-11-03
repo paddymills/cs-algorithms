@@ -1,6 +1,7 @@
 # Compiled class file
 *.class
 
+input/
 # Log file
 *.log
 

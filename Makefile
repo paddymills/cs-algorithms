@@ -22,8 +22,8 @@ $(BUILD_DIR)/%.class : $(SRC_DIR)/%.java | $(OBJDIR)
 	@echo "compiling: ($@) from ($^)"
 	javac -d $(BUILD_DIR) $(SRC_DIR)/*.java
 
-test: $(BUILD_DIR)/Solution.class $(BUILD_DIR)/ExtraCredit.class $(BUILD_DIR)/Test.class 
-	java -cp $(BUILD_DIR) Test
+test: $(BUILD_DIR)/Solution.class
+	java -cp $(BUILD_DIR) Solution
 
 # catch-all for launching a binary not explicity listed
 %: $(BUILD_DIR)/%.class

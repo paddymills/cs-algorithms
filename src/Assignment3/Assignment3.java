@@ -1,4 +1,3 @@
-package Assignment3;
 
 /*
 * Patrick Miller
