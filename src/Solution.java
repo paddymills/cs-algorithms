@@ -26,14 +26,22 @@ public class Solution {
             this.end   = Integer.parseInt( vals[2] );
             this.ev    = Float.parseFloat( vals[3] );
         }
+
+        public String toString() {
+            return "Movie<" + this.id + "|" + this.start + "-" + this.end + ":" + this.ev + ">";
+        }
     }
 
     public static void main(String[] args) {
         Movie[] movies = readInput();
-        indexMovies(movies);
 
-        boolean[] results = topDown(movies);
-        // boolean[] results = bottomUp(movies);
+        display(movies, topDown(movies));
+        // System.out.println("======================");
+        // display(movies, bottomUp(movies));
+        
+    }
+
+    public static void display(Movie[] movies, boolean[] results) {
         for (int i=0; i<movies.length; i++) {
             if ( results[i] )
                 System.out.println(movies[i].id);
@@ -61,9 +69,9 @@ public class Solution {
         TreeMap<Integer, Integer> times = new TreeMap<>();
 
         // collect all start and end times
-        for (Movie m : movies) {
-            times.put(m.start, 0);
-            times.put(m.end, 0);
+        for (int i=0; i<movies.length; i++) {
+            times.put(movies[i].start, 0);
+            times.put(movies[i].end,   0);
         }
 
         // store times and their seqential index mapping for quick access
@@ -74,64 +82,61 @@ public class Solution {
         }
 
         // update movie start and end times with sequential indexes
-        for (Movie m : movies) {
-            m.start = times.get(m.start);
-            m.end = times.get(m.end);
+        for (i=0; i<movies.length; i++) {
+            movies[i].start = times.get(movies[i].start);
+            movies[i].end   = times.get(movies[i].end);
         }
     }
 
     public static boolean[] topDown(Movie[] movies) {
-        int numberOfTimes = movies[movies.length-1].end+1;
-        Float[][] memo = new Float[movies.length+1][numberOfTimes];
-        boolean[][] taken = new boolean[movies.length+1][numberOfTimes];
+        ArrayList<HashMap<Integer, Float>> memo = new ArrayList<>();
+        for (int i=0; i<movies.length; i++)
+            memo.add(new HashMap<>());
 
-        topDownHelper(movies.length, movies[movies.length-1].end, movies, memo, taken);
 
-        // printMemo(memo, taken);
+        int end = movies[movies.length-1].end;
+        topDownHelper(movies.length-1, end, memo, movies);
 
         // calculate result
         boolean[] result = new boolean[movies.length];
-        int i = memo.length-1;
-        for (int j=memo[0].length-1; j>0;) {
-            if ( taken[i][j] ) {
-                result[i-1] = true;
-                j = movies[i-1].start;
+        
+        // calc result
+        for (int i=movies.length-1; i>=0; i--) {
+            if ( i == 0 ) {
+                if ( movies[i].end <= end )
+                    result[i] = true;
             }
-            i--;
-
-            if ( i < 0 )
-                break;
+            else if ( memo.get(i-1).get(end) < memo.get(i).get(end) ) {
+                result[i] = true;
+                end = movies[i].start;
+            }
         }
+
+        printMemo(memo, result);
 
         return result;
     }
 
-    public static float topDownHelper(int i, int t, Movie[] movies, Float[][] memo, boolean[][] taken) {
-        if ( t < 0 ) return Float.MIN_VALUE;
-        if ( t == 0 || i == 0 ) return 0f;
+    private static float topDownHelper(int i, int t, ArrayList<HashMap<Integer, Float>> memo, Movie[] movies) {
+        if ( t <= 0 ) return 0f;
+        if ( i < 0 ) return 0f;
 
-        if ( memo[i][t] != null ) return memo[i][t];
+        if ( memo.get(i).get(t) != null ) return memo.get(i).get(t);
 
-        // don't select movie
-        float notSelected = topDownHelper(i-1, t, movies, memo, taken);
+        float notSelected = topDownHelper(i-1, t, memo, movies);
 
-        // select movie
-        float selected = 0f;
-        if ( movies[i-1].end <= t ) {
-            selected = movies[i-1].ev + topDownHelper(i-1, movies[i-1].start, movies, memo, taken);
-        }
+        float selected = 0;
+        if ( movies[i].end <= t )
+            selected = movies[i].ev + topDownHelper(i-1, movies[i].start, memo, movies);
 
-        if ( selected > notSelected ) {
-            memo[i][t] = selected;
-            taken[i][t] = true;
-        } else {
-            memo[i][t] = notSelected;
-        }
+        memo.get(i).put(t, Math.max(notSelected, selected));
 
-        return memo[i][t];
+        return memo.get(i).get(t);
     }
 
     public static boolean[] bottomUp(Movie[] movies) {
+        indexMovies(movies);
+
         int numberOfTimes = movies[movies.length-1].end+1;
         float[][] memo = new float[movies.length+1][numberOfTimes];
         boolean[][] taken = new boolean[movies.length+1][numberOfTimes];
@@ -148,7 +153,7 @@ public class Solution {
             }
         }
 
-        // printMemo(memo, taken);
+        printMemo(movies, memo, taken);
 
         // calculate result
         boolean[] result = new boolean[movies.length];
@@ -167,25 +172,29 @@ public class Solution {
         return result;
     }
 
-    private static void printMemo(float[][] memo, boolean[][] taken) {
-        for (int i=0; i<memo.length; i++) {
-            System.err.print(i);
-            for (int j=0; j<memo[0].length; j++) {
-                String tstr = taken[i][j] ? "x" : "_";
-                System.out.print(" | " + memo[i][j] + tstr);
+    private static void printMemo(Movie[] movies, float[][] memo, boolean[][] taken) {
+        if (System.getenv("GDK_BACKEND") != null) {
+            for (Movie m : movies)
+                System.out.println(m);
+
+            for (int i=0; i<memo.length; i++) {
+                System.err.print(i);
+                for (int j=0; j<memo[0].length; j++) {
+                    String tstr = taken[i][j] ? "x" : "_";
+                    System.out.print(String.format(" | %.1f%s", memo[i][j], tstr));
+                }
+                System.out.println();
             }
-            System.out.println();
         }
     }
 
-    private static void printMemo(Float[][] memo, boolean[][] taken) {
-        for (int i=0; i<memo.length; i++) {
-            System.err.print(i);
-            for (int j=0; j<memo[0].length; j++) {
-                String tstr = taken[i][j] ? "x" : "_";
-                System.out.print(" | " + memo[i][j] + tstr);
-            }
-            System.out.println();
+    private static void printMemo(ArrayList<HashMap<Integer, Float>> memo, boolean[] taken) {
+        if (System.getenv("GDK_BACKEND") != null) {
+            System.out.println(memo);
+
+            for (boolean b : taken)
+                System.out.print("|" + b);
+            System.out.println("|");
         }
     }
 }
