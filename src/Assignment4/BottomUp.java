@@ -1,3 +1,4 @@
+package Assignment4;
 
 /*
  * Patrick Miller
@@ -9,6 +10,8 @@
 
 import java.io.*;
 import java.util.*;
+
+import Assignment4.Solution.Movie;
 
 public class Solution {
 
