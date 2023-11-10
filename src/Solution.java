@@ -39,6 +39,29 @@ public class Solution {
         }
     }
 
+    static class IntPair {
+        int a, b;
+
+        public IntPair(int a, int b) {
+            this.a = a;
+            this.b = b;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            return ((IntPair) other).a == this.a && ((IntPair) other).b == this.b;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(this.a, this.b);
+        }
+
+        public String toString() {
+            return "(" + this.a + ", " + this.b + ")";
+        }
+    }
+
     public static void main(String[] args) {
         Movie[] movies = readInput();
 
@@ -95,10 +118,10 @@ public class Solution {
         }
     }
 
-    // public static boolean[] topDown(Movie[] movies) {
-    //     ArrayList<HashMap<Integer, Float>> memo = new ArrayList<>();
-    //     for (int i=0; i<movies.length; i++)
-    //         memo.add(new HashMap<>());
+    public static boolean[] topDown(Movie[] movies) {
+        ArrayList<HashMap<Integer, Float>> memo = new ArrayList<>();
+        for (int i=0; i<movies.length; i++)
+            memo.add(new HashMap<>());
 
 
     //     int end = movies[movies.length-1].end;
@@ -107,28 +130,28 @@ public class Solution {
     //     // calculate result
     //     boolean[] result = new boolean[movies.length];
         
-    //     // calc result
-    //     for (int i=movies.length-1; i>=0; i--) {
-    //         if ( i == 0 ) {
-    //             if ( movies[i].end <= end )
-    //                 result[i] = true;
-    //         }
-    //         else if ( memo.get(i-1).get(end) < memo.get(i).get(end) ) {
-    //             result[i] = true;
-    //             end = movies[i].start;
-    //         }
-    //     }
+        // calc result
+        for (int i=movies.length-1; i>=0; i--) {
+            if ( i == 0 ) {
+                if ( movies[i].end <= end )
+                    result[i] = true;
+            }
+            else if ( memo.get(i-1).get(end) < memo.get(i).get(end) ) {
+                result[i] = true;
+                end = movies[i].start;
+            }
+        }
 
     //     printMemo(memo, result);
 
     //     return result;
     // }
 
-    // private static float topDownHelper(int i, int t, ArrayList<HashMap<Integer, Float>> memo, Movie[] movies) {
-    //     if ( t <= 0 ) return 0f;
-    //     if ( i < 0 ) return 0f;
+    private static float topDownHelper(int i, int t, ArrayList<HashMap<Integer, Float>> memo, Movie[] movies) {
+        if ( t <= 0 ) return 0f;
+        if ( i < 0 ) return 0f;
 
-    //     if ( memo.get(i).get(t) != null ) return memo.get(i).get(t);
+        if ( memo.get(i).get(t) != null ) return memo.get(i).get(t);
 
     //     float notSelected = topDownHelper(i-1, t, memo, movies);
 
@@ -136,10 +159,10 @@ public class Solution {
     //     if ( movies[i].end <= t )
     //         selected = movies[i].ev + topDownHelper(i-1, movies[i].start, memo, movies);
 
-    //     memo.get(i).put(t, Math.max(notSelected, selected));
+        memo.get(i).put(t, Math.max(notSelected, selected));
 
-    //     return memo.get(i).get(t);
-    // }
+        return memo.get(i).get(t);
+    }
 
     public static boolean[] bottomUp(Movie[] movies) {
         indexMovies(movies);
@@ -194,7 +217,7 @@ public class Solution {
         }
     }
 
-    private static void printMemo(ArrayList<HashMap<Integer, Float>> memo, boolean[] taken) {
+    private static void printMemo(HashMap<IntPair, Float> memo, boolean[] taken) {
         if (System.getenv("GDK_BACKEND") != null) {
             System.out.println(memo);
 
