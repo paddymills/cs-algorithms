@@ -1,0 +1,23 @@
+\documentclass{article}
+\usepackage{amsmath}
+
+
+\begin{document}
+
+	\title{Assignment 4}
+	
+	P(i, e) = \text{
+		max number of Oscars expected to be won during a time frame
+		ending at time t if on movies in
+	}
+	$\lbrace M_1, M_2, \dots, M_i \rbrace$ \text{ are available.}
+	
+	\[
+	P(i, e) =
+	\begin{cases}
+		0, & \text{if } t \leq 0 \\
+		0, & \text{if } i = 0 \text{ and } t \geq 0 \\
+		max(EV(M_i) + P(i-1, startTime(M_i)), P(i-1,t)), & \text{otherwise}
+	\end{cases}
+	\]
+\end{document}
