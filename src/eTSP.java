@@ -25,9 +25,7 @@ public class eTSP {
             this.y = Integer.parseInt( vals[1] );
         }
 
-        /*
-         * √[(𝑥1 −𝑥2)^2 +(𝑦1 −𝑦2)^2]
-         */
+        // euclidean distance from docs
         public double distanceTo(Point other) {
             return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
         }
@@ -48,52 +46,39 @@ public class eTSP {
             this.cities = points;
         }
 
+        public void calculateTour() {
+            initTour();
+        }
+
         /*
-         * init tour by repeatitively selecting the next closest city
-         * short circuits when it finds a distance closer than a given delta
+         * init tour randomly
         */
         void initTour() {
             HashSet<Integer> visitedCities = new HashSet<>();
-            double delta = 100;
-
-            // initialize first stop to be first city
-            stops[0] = 0;
-            visitedCities.add(0);
             
-            for (int i = 1; i < stops.length; i++) {
-                progressPercentage(i, stops.length);
-                int closestCity = stops.length;
-                double closestCityDistance = Double.MAX_VALUE;
-                for (int j = 0; j < cities.length; j++) {
-                    if (visitedCities.contains(j)) continue;
+            stops[0] = (int)(Math.random() * stops.length);
+            visitedCities.add(stops[0]);
 
-                    double dist = cities[stops[i-1]].distanceTo(cities[j]);
+            for (int i=1; i<stops.length; i++) {
+                // progressPercentage(i, stops.length);
+                System.out.print("\r" + i);
 
-                    if (dist < closestCityDistance) {
-                        closestCity = j;
-                        closestCityDistance = dist;
-                    }
-
-                    if (closestCityDistance < delta)
-                        break;
-                }
-
-                // shouldn't happen, but lets check that a city was selected
-                if (closestCity == stops.length)
-                    System.err.println("tourInit reached an interation with no closest city selected");
+                int id;
+                do {
+                    id = (int)(Math.random() * stops.length);
+                } while (visitedCities.contains(id));
 
                 // commit closest city
-                visitedCities.add(closestCity);
-                stops[i] = closestCity;
-                length += closestCityDistance;
+                visitedCities.add(id);
+                stops[i] = id;
+                length += cities[stops[i-1]].distanceTo(cities[stops[i]]);
             }
+
+            // cleanup stdout
+            System.out.println("\r");
 
             // add distance from first stop to last stop
             this.length += cities[stops[0]].distanceTo(cities[stops[stops.length-1]]);
-        }
-
-        public void calculateTour() {
-            initTour();
         }
     }
 
