@@ -6,7 +6,7 @@
  */
 
 
-import java.io.*;
+// import java.io.*;
 import java.util.*;
 
 public class eTSP {
@@ -60,6 +60,11 @@ public class eTSP {
         return points;
     }
 
+    /*
+     * Grade calculation from rubric
+     * 
+     * grade = -1.009 * 10^-5 * tourLength + 224
+    */
     public static double grade(double tourLength) {
         return -1.009 * Math.pow(10, -5) * tourLength + 224;
     }
