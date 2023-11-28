@@ -37,6 +37,10 @@ public class eTSP {
         // TODO: implement
         // ideas:
         //  - Djikstra
+
+        double tourLength = 15_000_000;
+
+        System.out.println("Your grade is: " + String.format("%.02f%%", grade(tourLength)));
     }
 
     public static Point[] readInput() {
@@ -54,5 +58,9 @@ public class eTSP {
         scanner.close();
 
         return points;
+    }
+
+    public static double grade(double tourLength) {
+        return -1.009 * Math.pow(10, -5) * tourLength + 224;
     }
 }
