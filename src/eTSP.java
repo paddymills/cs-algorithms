@@ -75,10 +75,55 @@ public class eTSP {
             }
 
             // cleanup stdout
-            System.out.println("\r");
+            System.out.print("\r");
 
             // add distance from first stop to last stop
             this.length += cities[stops[0]].distanceTo(cities[stops[stops.length-1]]);
+        }
+
+        public boolean shiftOneStop() {
+            ArrayList<Integer> tmpTour = new ArrayList<>();
+            boolean newTour = false;
+            
+            for (int i = 0; i < cities.length; i++) {
+                for (int j = 0; j < cities.length; j++) {
+                    // move stop[i] to stop[j]
+
+                    tmpTour.clear();
+
+                    for (int k = 0; k < j; k++) {
+                        System.out.print("\r<"+i+","+j+","+k+">");
+                        if (k != i)
+                            tmpTour.add(stops[k]);
+                    }
+                    tmpTour.add(stops[i]);
+                    for (int k = j; k < stops.length; k++) {
+                        System.out.print("\r<"+i+","+j+","+k+">");
+                        if (k != i)
+                            tmpTour.add(stops[k]);
+                    }
+
+                    double score = 0;
+                    for (int k = 1; k < stops.length; k++) {
+                        score += cities[tmpTour.get(k-1)].distanceTo(cities[tmpTour.get(k)]);
+                    }
+                    score += cities[tmpTour.get(0)].distanceTo(cities[tmpTour.get(tmpTour.size()-1)]);
+
+                    if (score < length) {
+                        // commit new
+                        for(int k=0; k<tmpTour.size(); k++)
+                            stops[k] = tmpTour.get(k);
+                        length = score;
+
+                        newTour = true;
+                    }
+
+                    // cleanup stdout
+                    System.out.print("\r");
+                }
+            }
+
+            return newTour;
         }
     }
 
@@ -92,12 +137,17 @@ public class eTSP {
         Tour tour = new Tour(points);
         tour.calculateTour();
 
-        System.out.println(String.format("%.07f", tour.length));
-        // for (int stop : tour.stops) {
-        //     System.out.println(points[stop].toString());
-        // }
-
-        System.out.println("Your grade is: " + String.format("%.02f%%", grade(tour.length)));
+        for (int i = 0; i < 5; i++) {
+            System.out.println(String.format("%.07f", tour.length));
+            // for (int stop : tour.stops) {
+            //     System.out.println(points[stop].toString());
+            // }
+    
+            System.out.println("Your grade is: " + String.format("%.02f%%", grade(tour.length)));
+            
+            System.out.println("+++++++++++++++++++++");
+            if (!tour.shiftOneStop()) break;
+        }
     }
 
     public static Point[] readInput() {
