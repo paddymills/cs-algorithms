@@ -211,9 +211,12 @@ function shift_one() {
   var bestScore = getDist(idsInOrder);
   var origDist = bestScore;
 
-  for (var i = 0; i < 52; i++) {
-    for (var j = 0; j < 52; j++) {
+  // exhaustively find the best solution of shifting one id
+  // 
+  for (var i = 0; i < 52; i++) {    // source id
+    for (var j = 0; j < 52; j++) {  // destination id
       var tmpIds = [];
+      // tmpids = idsInOrder[0..j] + idsInOrder[i] + idsInOrder[j..]
       for (var k = 0; k < j; k++) {
         if (k != i) tmpIds.push(idsInOrder[k]);
       }
