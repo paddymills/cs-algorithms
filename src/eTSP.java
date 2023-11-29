@@ -59,24 +59,4 @@ public class eTSP {
     public static double grade(double tourLength) {
         return -1.009 * Math.pow(10, -5) * tourLength + 224;
     }
-
-    public static void progressPercentage(int complete, int total) {
-        if (complete > total) {
-            throw new IllegalArgumentException();
-        }
-        
-        StringBuilder bar = new StringBuilder("\r|");
-        
-        int completePerc = (complete/total) * 10;
-        for (int i=0; i<=100; i+=10) {
-            if (i<completePerc) bar.append("=");
-            else bar.append("-");
-        }
-        
-        bar.append("| " + complete + "/" + total);
-        System.out.print(bar);
-        if (complete == total) {
-            System.out.print("\n");
-        }
-    }
 }

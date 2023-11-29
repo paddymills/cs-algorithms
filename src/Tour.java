@@ -22,7 +22,10 @@ public class Tour {
         stops.add((int) (Math.random() * stops.size()));
         visitedCities.add(stops.get(0));
 
+        Progress bar = new Progress("init", cities.length);
         for (int i = 1; i < cities.length; i++) {
+            bar.update(i);
+
             int id;
             do {
                 id = (int) (Math.random() * cities.length);
@@ -32,6 +35,7 @@ public class Tour {
             stops.add(id);
             length += cities[stops.get(i - 1)].distanceTo(cities[stops.get(i)]);
         }
+        bar.finish();
 
         this.length += cities[stops.get(0)].distanceTo(cities[stops.get(stops.size() - 1)]);
     }
@@ -39,8 +43,11 @@ public class Tour {
     public boolean shiftOneStop() {
         boolean newTour = false;
 
+        Progress bar = new Progress("Finding shift", Math.pow(cities.length, 2));
         for (int i = 0; i < cities.length; i++) {
             for (int j = 0; j < cities.length; j++) {
+                bar.update(i*j);
+
                 // move stops[i] to stops[j]
                 if (i == j) continue;
                 
@@ -79,6 +86,7 @@ public class Tour {
                 System.out.print("\r");
             }
         }
+        bar.finish();
 
         return newTour;
     }
