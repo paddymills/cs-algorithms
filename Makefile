@@ -25,7 +25,7 @@ $(BUILD_DIR)/%.class : $(SRC_DIR)/%.java | $(OBJDIR)
 test: $(BUILD_DIR)/Solution.class
 	java -cp $(BUILD_DIR) Solution
 
-tsp: $(BUILD_DIR)/eTSP.class
+tsp: $(BUILD_DIR)/eTSP.class $(BUILD_DIR)/Point.class $(BUILD_DIR)/Tour.class
 	cat tsp_input.txt | java -cp $(BUILD_DIR) eTSP
 
 # catch-all for launching a binary not explicity listed
