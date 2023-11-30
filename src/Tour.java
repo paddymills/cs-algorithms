@@ -1,43 +1,97 @@
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class Tour {
-    public ArrayList<Integer> stops;
-    public double length;
-    Point[] cities;
 
-    public Tour(Point[] points) {
-        this.stops = new ArrayList<>();
-        this.cities = points;
+    static class Node {
+        City city;
+        Edge prev, next;
+
+        public Node(City city) {
+            this.city = city;
+        }
+
+        public Node(City city, Edge prev) {
+            this.city = city;
+            this.prev = prev;
+        }
+
+        public void setNext(City next) {
+            this.next = new Edge(this, new Node(next));
+        }
+
+        public void setNext(Node next) {
+            this.next = new Edge(this, next);
+        }
+
+        public void setPrev(City prev) {
+            this.prev = new Edge(this, new Node(prev));
+        }
+
+        public void setPrev(Node prev) {
+            this.prev = new Edge(this, prev);
+        }
     }
 
-    public void calculateTour() {
+    static class Edge {
+        double distance;
+        Node a, b;
+
+        public Edge(Node a, Node b) {
+            this.distance = a.city.distanceTo(b.city);
+            
+            this.a = a;
+            this.b = b;
+
+            // join nodes by this edge
+            a.next = this;
+            b.prev = this;
+        }
+        
+        public Node nextNode(Node currentNode) {
+            return currentNode == this.a ? this.b : this.a;  
+        }
+    }
+
+    public ArrayList<Integer> stops;
+    public double length;
+    Node start;
+    City[] cities;
+
+    public Tour(City[] cities) {
+        this.stops = new ArrayList<>();
+        this.cities = cities;
+
         initTour();
     }
 
-    void initTour() {
-        HashSet<Integer> visitedCities = new HashSet<>();
+    public void output() {
+        System.out.println(String.format("%.07f", length));
+        for (int stop : stops) {
+            System.out.println(cities[stop].toString());
+        }
+    }
 
-        stops.add((int) (Math.random() * stops.size()));
-        visitedCities.add(stops.get(0));
+    void initTour() {
+        Node current;
+
+        start = new Node(cities[0]);
+        current = start;
 
         Progress bar = new Progress("init", cities.length);
         for (int i = 1; i < cities.length; i++) {
             bar.update(i);
-
-            int id;
-            do {
-                id = (int) (Math.random() * cities.length);
-            } while (visitedCities.contains(id));
-
-            visitedCities.add(id);
-            stops.add(id);
-            length += cities[stops.get(i - 1)].distanceTo(cities[stops.get(i)]);
+            current.setNext(new Node(cities[i]));
+            length += current.next.distance;
+            current = current.next.nextNode(current);
         }
+        current.setNext(start);
+        length += current.next.distance;
         bar.finish();
+    }
 
-        this.length += cities[stops.get(0)].distanceTo(cities[stops.get(stops.size() - 1)]);
+    public void calculateTour() {
+        // initTour();
     }
 
     public boolean shiftOneStop() {
