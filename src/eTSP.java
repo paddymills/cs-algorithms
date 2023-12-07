@@ -12,23 +12,23 @@ import java.util.*;
 public class eTSP {
 
     public static void main(String[] args) {
-        Point[] points = readInput();
+        ArrayList<Point> points = readInput();
 
-        Tour tour = new Tour(points);
+        Tour tour = new Tour((Point[])points.toArray());
         tour.calculateTour();
         tour.output();
     }
 
-    public static Point[] readInput() {
+    public static ArrayList<Point> readInput() {
         // read input from stdin
         Scanner scanner = new Scanner(System.in);
         
         // first line: number of test cases
         int n = Integer.parseInt( scanner.nextLine() );
 
-        Point[] points = new Point[n];
+        ArrayList<Point> points = new ArrayList<>();
         for (int i = 0; i < n; i++) {
-            points[i] = new Point(scanner.nextLine());
+            points.add( new Point(scanner.nextLine()) );
         }
 
         scanner.close();
