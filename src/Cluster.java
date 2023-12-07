@@ -35,6 +35,8 @@ public class Cluster {
             n++;
         }
         
+        if (n == 0) return 0;
+
         centroid.x = centroid.x / n;
         centroid.y = centroid.y / n;
 
@@ -54,6 +56,8 @@ public class Cluster {
     public void initialOrdering() {
         // invalidate cached distance, in case this is called where it shouldn't be
         distance = -1;
+
+        if (points.size() == 0) return;
 
         ArrayList<Point> pts = drainPoints();
         points.add( pts.remove(0) );
