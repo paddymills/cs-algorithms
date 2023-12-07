@@ -18,9 +18,9 @@ public class Test {
 
     static double usingKMeans(Point[] points) {
         // a reasonable number I found during testing, given a KMeans with k=100
-        double rebalanceThreshold = 1000;
+        double rebalanceThreshold = 500;
 
-        KMeans km = new KMeans(100);
+        KMeans km = new KMeans(1000);
         km.init(points);
 
         double th;
@@ -29,14 +29,24 @@ public class Test {
             System.out.println("Rebalance delta: " + th);
         } while (th > rebalanceThreshold);
 
-        for (int i = 0; i < 1000; i++) {
-            System.out.println("\t> Swap Two: " + km.swapTwo());
-            System.out.println("\t> Shift One: " + km.shiftOne());
+        Progress p = new Progress("Test", 100);
+        double grade;
+        for (int i = 0; i < 100; i++) {
+            km.swapTwo();
+            km.shiftOne();
             // System.out.println("\t> Shift Section: " + km.shiftSection());
             // System.out.println("\t> Reverse: " + km.reverse());
-            System.out.println(">> Your grade is: " + String.format("%.02f%%", eTSP.grade(km.finalDistance())));
-            System.out.println("======================================");
+
+            
+            grade = eTSP.grade(km.finalDistance());
+            p.update(i);
+            if (i % 10 == 0) {
+                p.finish();
+                System.out.println(">> Your grade is: " + String.format("%.02f%%", grade));
+                p = new Progress("Test", 100);
+            }
         }
+        p.finish();
 
         return km.finalDistance();
     }

@@ -125,34 +125,25 @@ public class Cluster {
             for (int j = points.size()-1; j > i; j--) {
                 tempDistance = distance;
 
-                // remove i and put j in its place
-                
-                // i's previous point
+                // remove current distances
                 tempDistance -= distanceBetweenPoints(i, i-1);
-                tempDistance += distanceBetweenPoints(j, i-1);
-                // i's next point
                 tempDistance -= distanceBetweenPoints(i, i+1);
-                tempDistance += distanceBetweenPoints(j, i+1);
-
-                // ==================================================================
-
-                // remove j and put i in its place
-
-                // j's previous point
-                tempDistance -= distanceBetweenPoints(j, j-1);
-                tempDistance += distanceBetweenPoints(i, j-1);
-                // j's next point
+                if (j - i > 1)  // i and j are not adjacent
+                    tempDistance -= distanceBetweenPoints(j, j-1);
                 tempDistance -= distanceBetweenPoints(j, j+1);
+
+                // add new distances
+                tempDistance += distanceBetweenPoints(j, i-1);
+                tempDistance += distanceBetweenPoints(j, i+1);
+                if (j - i > 1)  // i and j are not adjacent
+                    tempDistance += distanceBetweenPoints(i, j-1);
                 tempDistance += distanceBetweenPoints(i, j+1);
-                
 
                 // save swap indexes if we have a new minimum distance
                 if (tempDistance < minDistance) {
                     minDistance = tempDistance;
                     swap1 = i;
                     swap2 = j;
-
-                    j = i = points.size();
                 }
             }
         }
@@ -210,9 +201,11 @@ public class Cluster {
                     minDistance = tempDistance;
                     shiftFrom = i;
                     shiftTo = j;
-
-                    j = i = points.size();
                 }
+
+                // if (minDistance < distance * 0.5) {
+                //     j = i = points.size();
+                // }
             }
         }
 

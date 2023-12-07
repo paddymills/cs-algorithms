@@ -11,18 +11,9 @@ public class KMeans {
     }
 
     public void init(Point[] points) {
-        Random rand = new Random();
-        HashSet<Integer> usedCentroids = new HashSet<>();
-
         // assign centroids
         for (int i = 0; i < k; i++) {
-            int n;
-            do {
-                n = rand.nextInt(points.length);
-            } while (usedCentroids.contains(n));
-
-            clusters.add(new Cluster(points[n]));
-            usedCentroids.add(n);
+            clusters.add(new Cluster(points[i]));
         }
 
         addPoints(points);
