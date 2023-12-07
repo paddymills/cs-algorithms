@@ -1,12 +1,9 @@
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class Test {
     
     public static void main(String[] args) {
-        Point[] points = eTSP.readInput();
-        // getRandomKmeansSetup(points);
+        ArrayList<Point> points = eTSP.readInput();
 
         // double length = usingTour(points);
         double length = usingKMeans(points);
@@ -20,75 +17,38 @@ public class Test {
         return tour.length;
     }
 
-    static double usingKMeans(Point[] points) {
+    static double usingKMeans(ArrayList<Point> points) {
         // a reasonable number I found during testing, given a KMeans with k=100
-        double rebalanceThreshold = 1000;
+        // double rebalanceThreshold = 1000;
+        int[] thresholds = {50000, 10000, 7500, 5000, 2500, 1000, 750, 500, 250, 100};
 
+        double distance = 0;
         KMeans km = new KMeans(1000);
-        km.init(points);
+        for (int i = 0; i < thresholds.length; i++) {
+            // re-init and set neighborhoods(clusters)
+            km = new KMeans(km.k, points);
 
-        double th;
-        int count = 0;
-        do {
-            th = km.rebalance();
-            count++;
-            System.out.println("Rebalance delta: " + th);
-        } while (th > rebalanceThreshold);
-        System.out.println("Rebalanced: " + count);
+            // threshold will increase by 10% each time
+            km.rebalanceUntil(thresholds[i]);
+            km.sortClusters();
 
-        Progress p = new Progress("Test", 100);
-        double grade;
-        for (int i = 0; i < 100; i++) {
-            km.swapTwo();
-            km.shiftOne();
-            // System.out.println("\t> Shift Section: " + km.shiftSection());
-            // System.out.println("\t> Reverse: " + km.reverse());
-
-            
-            grade = eTSP.grade(km.finalDistance());
-            p.update(i);
-            if (i % 10 == 0) {
-                p.finish();
-                System.out.println(">> Your grade is: " + String.format("%.02f%%", grade));
-                p = new Progress("Test", 100);
+            Progress p = new Progress("Test", 100);
+            for (int index = 0; index < 10; index++) {
+                p.update(i* 10 + index);
+                km.swapTwo();
+                km.shiftOne();
+                // km.shiftSection();
+                // km.reverse();
             }
+            p.finish();
+
+
+            distance = km.finalDistance();
+            System.out.println(">> Your grade is: " + String.format("%.02f%%", eTSP.grade(distance)));
+
+            points = km.getPoints();
         }
-        p.finish();
 
-        return km.finalDistance();
-    }
-
-    static void getRandomKmeansSetup(Point[] points) {
-        int minRebalances = Integer.MAX_VALUE;
-        // ArrayList<Integer> bestIndex = null;
-        Progress p = new Progress("KMeans sim", 100);
-        for (int i = 0; i < 100; i++) {
-            p.update();
-
-            KMeans km = new KMeans(1000);
-            ArrayList<Integer> index = km.testInit(points);
-
-            int rebalances = 0;
-            do {
-                rebalances++;
-            } while (km.rebalance() > 5000);
-
-            if (rebalances < minRebalances) {
-                minRebalances = rebalances;
-
-                try {
-                    FileWriter writer = new FileWriter("kmeans_index.txt");
-                    writer.write(index.toString());
-                    writer.close();
-                    
-                } catch (IOException e) {
-                    System.out.println("An error occurred: " + e.getMessage());
-                    e.printStackTrace();
-                }
-            }
-        }
-        p.finish();
-
-        
+        return distance;
     }
 }
