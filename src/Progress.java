@@ -3,15 +3,23 @@
 public class Progress {
     int NUM_STEPS = 20;
 
+    double complete;
     double total;
     String desc;
 
     public Progress(String desc, double total) {
+        this.complete = 0;
         this.total = total;
         this.desc = desc;
     }
 
-    public void update(int complete) {
+    public void update() {
+        update(complete+1);
+    }
+
+    public void update(double complete) {
+        this.complete = complete;
+
         if (complete > total) {
             throw new IllegalArgumentException();
         }

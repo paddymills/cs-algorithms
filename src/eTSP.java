@@ -12,28 +12,28 @@ import java.util.*;
 public class eTSP {
 
     public static void main(String[] args) {
-        City[] cities = readInput();
+        Point[] points = readInput();
 
-        Tour tour = new Tour(cities);
+        Tour tour = new Tour(points);
         tour.calculateTour();
         tour.output();
     }
 
-    public static City[] readInput() {
+    public static Point[] readInput() {
         // read input from stdin
         Scanner scanner = new Scanner(System.in);
         
         // first line: number of test cases
         int n = Integer.parseInt( scanner.nextLine() );
 
-        City[] cities = new City[n];
+        Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {
-            cities[i] = new City(scanner.nextLine());
+            points[i] = new Point(scanner.nextLine());
         }
 
         scanner.close();
 
-        return cities;
+        return points;
     }
 
     /*

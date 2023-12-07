@@ -22,12 +22,12 @@ $(BUILD_DIR)/%.class : $(SRC_DIR)/%.java | $(OBJDIR)
 	@echo "compiling: ($@) from ($^)"
 	javac -d $(BUILD_DIR) $(SRC_DIR)/*.java
 
-test: $(BUILD_DIR)/eTSP.class $(BUILD_DIR)/City.class $(BUILD_DIR)/Tour.class $(BUILD_DIR)/Progress.class $(BUILD_DIR)/Test.class
+test: $(BUILD_DIR)/eTSP.class $(BUILD_DIR)/Point.class $(BUILD_DIR)/Tour.class $(BUILD_DIR)/KMeans.class $(BUILD_DIR)/Progress.class $(BUILD_DIR)/Test.class
 	cat tsp_input.txt | java -cp $(BUILD_DIR) Test
 
-tsp: $(BUILD_DIR)/eTSP.class $(BUILD_DIR)/City.class $(BUILD_DIR)/Tour.class $(BUILD_DIR)/Progress.class
+tsp: $(BUILD_DIR)/eTSP.class $(BUILD_DIR)/Point.class $(BUILD_DIR)/Tour.class $(BUILD_DIR)/Progress.class
 	cat tsp_input.txt | java -cp $(BUILD_DIR) eTSP
 
-# catch-all for launching a binary not explicity listed
+# catch-all for launching a binary not expliPoint listed
 %: $(BUILD_DIR)/%.class
 	java -cp $(BUILD_DIR) $@

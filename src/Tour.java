@@ -4,19 +4,19 @@ import java.util.ArrayList;
 public class Tour {
 
     static class Node {
-        City city;
+        Point Point;
         Edge prev, next;
 
-        public Node(City city) {
-            this.city = city;
+        public Node(Point Point) {
+            this.Point = Point;
         }
 
-        public Node(City city, Edge prev) {
-            this.city = city;
+        public Node(Point Point, Edge prev) {
+            this.Point = Point;
             this.prev = prev;
         }
 
-        public void setNext(City next) {
+        public void setNext(Point next) {
             this.next = new Edge(this, new Node(next));
         }
 
@@ -24,7 +24,7 @@ public class Tour {
             this.next = new Edge(this, next);
         }
 
-        public void setPrev(City prev) {
+        public void setPrev(Point prev) {
             this.prev = new Edge(this, new Node(prev));
         }
 
@@ -38,7 +38,7 @@ public class Tour {
         Node a, b;
 
         public Edge(Node a, Node b) {
-            this.distance = a.city.distanceTo(b.city);
+            this.distance = a.Point.distanceTo(b.Point);
             
             this.a = a;
             this.b = b;
@@ -56,9 +56,9 @@ public class Tour {
     public ArrayList<Integer> stops;
     public double length;
     Node start;
-    City[] cities;
+    Point[] cities;
 
-    public Tour(City[] cities) {
+    public Tour(Point[] cities) {
         this.stops = new ArrayList<>();
         this.cities = cities;
 
