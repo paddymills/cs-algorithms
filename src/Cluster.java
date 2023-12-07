@@ -128,14 +128,14 @@ public class Cluster {
                 // remove current distances
                 tempDistance -= distanceBetweenPoints(i, i-1);
                 tempDistance -= distanceBetweenPoints(i, i+1);
-                if (j - i > 1)  // i and j are not adjacent
+                if (j - 1 != i)  // i and j are not adjacent
                     tempDistance -= distanceBetweenPoints(j, j-1);
                 tempDistance -= distanceBetweenPoints(j, j+1);
 
                 // add new distances
                 tempDistance += distanceBetweenPoints(j, i-1);
                 tempDistance += distanceBetweenPoints(j, i+1);
-                if (j - i > 1)  // i and j are not adjacent
+                if (j - 1 != i)  // i and j are not adjacent
                     tempDistance += distanceBetweenPoints(i, j-1);
                 tempDistance += distanceBetweenPoints(i, j+1);
 
